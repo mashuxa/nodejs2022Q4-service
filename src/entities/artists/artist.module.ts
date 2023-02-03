@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ArtistController } from './artists.controller';
-import { ArtistsService } from './artists.service';
+import { DBModule } from '../../db/db.module';
 
 @Module({
   controllers: [ArtistController],
-  providers: [ArtistsService],
+  imports: [DBModule],
 })
 export class ArtistModule {}

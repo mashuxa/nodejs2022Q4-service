@@ -10,29 +10,29 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-Track.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
 import { UpdateTrackDto } from './dto/update-Track.dto';
+import { DB } from '../../db/DB';
 
 @Controller('track')
 export class TrackController {
-  constructor(private readonly tracksService: TracksService) {}
+  constructor(private readonly db: DB) {}
 
   @Get()
   async findAll() {
-    return this.tracksService.findAll();
+    return this.db.tracks.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tracksService.findById(id);
+    return this.db.tracks.findById(id);
   }
 
   @Post()
   async create(@Body() createTrackDto: CreateTrackDto) {
-    return this.tracksService.create(new CreateTrackDto(createTrackDto));
+    return this.db.tracks.create(new CreateTrackDto(createTrackDto));
   }
 
   @Put(':id')
@@ -41,22 +41,22 @@ export class TrackController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    const track = this.tracksService.findById(id);
+    const track = this.db.tracks.findById(id);
 
     if (!track) return;
 
-    return this.tracksService.update(id, updateTrackDto);
+    return this.db.tracks.update(id, updateTrackDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    const track = this.tracksService.findById(id);
+    const track = this.db.tracks.findById(id);
 
     if (!track) return;
 
-    this.tracksService.remove(id);
+    this.db.tracks.remove(id);
 
     return '';
   }

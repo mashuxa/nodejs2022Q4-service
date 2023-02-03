@@ -2,14 +2,13 @@ import { Exclude } from 'class-transformer';
 import { User } from '../interface/user.interface';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateUserDto implements User {
+export class UpdateUserDto implements Omit<User, 'id'> {
   @IsNotEmpty()
   @IsString()
   @Exclude({ toPlainOnly: true })
   password: string;
 
   login: string;
-  id: string;
   createdAt: number;
   updatedAt: number;
   version: number;

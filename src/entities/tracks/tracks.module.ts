@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TrackController } from './tracks.controller';
-import { TracksService } from './tracks.service';
+import { DBModule } from '../../db/db.module';
 
 @Module({
   controllers: [TrackController],
-  providers: [TracksService],
+  imports: [DBModule],
 })
 export class TracksModule {}
