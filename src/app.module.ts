@@ -5,9 +5,16 @@ import { UsersModule } from './entities/users/users.module';
 import { TracksModule } from './entities/tracks/tracks.module';
 import { ArtistModule } from './entities/artists/artist.module';
 import { AlbumsModule } from './entities/albums/albums.module';
+import { FavoritesModule } from './entities/favorites/favorites.module';
 
 @Module({
-  imports: [UsersModule, TracksModule, ArtistModule, AlbumsModule],
+  imports: [
+    UsersModule,
+    TracksModule,
+    ArtistModule,
+    AlbumsModule,
+    FavoritesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

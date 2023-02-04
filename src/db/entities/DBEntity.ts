@@ -9,7 +9,11 @@ export class DBEntity<Entity extends { id: string }> {
     return this.entities.find((entity) => entity.id === id);
   }
 
-  findMany(propName: string, value: string): Entity[] {
+  findMany(propName: string, value: string | string[]): Entity[] {
+    if (Array.isArray(value)) {
+      return this.entities.filter((entity) => value.includes(entity[propName]));
+    }
+
     return this.entities.filter((entity) => entity[propName] === value);
   }
 
