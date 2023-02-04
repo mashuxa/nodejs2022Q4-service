@@ -13,26 +13,28 @@ import {
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { DB } from '../../db/DB';
+import { ArtistsService } from './artists.service';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(private readonly db: DB) {}
+  constructor(private readonly artistsService: ArtistsService) {}
 
   @Get()
   async findAll() {
-    return this.db.artists.findAll();
+    return await this.artistsService.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.db.artists.findById(id);
+    return await this.artistsService.findOne(id);
   }
 
   @Post()
   async create(@Body() createArtistDto: CreateArtistDto) {
-    return this.db.artists.create(new CreateArtistDto(createArtistDto));
+    const artist = new CreateArtistDto(createArtistDto);
+
+    return await this.artistsService.create(artist);
   }
 
   @Put(':id')
@@ -41,34 +43,13 @@ export class ArtistController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    const artist = this.db.artists.findById(id);
-
-    if (!artist) return;
-
-    return this.db.artists.update(id, updateArtistDto);
+    return await this.artistsService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    const artist = this.db.artists.findById(id);
-
-    if (!artist) return;
-
-    this.db.artists.remove(id);
-
-    const updatedTracks = this.db.tracks
-      .findMany('artistId', id)
-      .map((track) => ({ ...track, artistId: null }));
-    const updatedAlbums = this.db.albums
-      .findMany('artistId', id)
-      .map((artist) => ({ ...artist, artistId: null }));
-
-    this.db.tracks.updateMany(updatedTracks);
-    this.db.albums.updateMany(updatedAlbums);
-    this.db.favorites.artists.remove(id);
-
-    return '';
+    return await this.artistsService.delete(id);
   }
 }

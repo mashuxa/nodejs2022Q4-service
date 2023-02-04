@@ -13,26 +13,28 @@ import {
 import { CreateTrackDto } from './dto/create-Track.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
 import { UpdateTrackDto } from './dto/update-Track.dto';
-import { DB } from '../../db/DB';
+import { TracksService } from './tracks.service';
 
 @Controller('track')
 export class TrackController {
-  constructor(private readonly db: DB) {}
+  constructor(private readonly trackService: TracksService) {}
 
   @Get()
   async findAll() {
-    return this.db.tracks.findAll();
+    return await this.trackService.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.db.tracks.findById(id);
+    return await this.trackService.findOne(id);
   }
 
   @Post()
   async create(@Body() createTrackDto: CreateTrackDto) {
-    return this.db.tracks.create(new CreateTrackDto(createTrackDto));
+    const track = new CreateTrackDto(createTrackDto);
+
+    return await this.trackService.create(track);
   }
 
   @Put(':id')
@@ -41,24 +43,13 @@ export class TrackController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    const track = this.db.tracks.findById(id);
-
-    if (!track) return;
-
-    return this.db.tracks.update(id, updateTrackDto);
+    return await this.trackService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    const track = this.db.tracks.findById(id);
-
-    if (!track) return;
-
-    this.db.tracks.remove(id);
-    this.db.favorites.tracks.remove(id);
-
-    return '';
+    return await this.trackService.delete(id);
   }
 }

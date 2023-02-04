@@ -5,9 +5,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
-  // Module,
   Param,
   ParseUUIDPipe,
   Post,
@@ -17,62 +14,45 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import errorMessages from '../../constants/errorMessages';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { DB } from '../../db/DB';
+import { UsersService } from './users.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly db: DB) {}
+  constructor(private readonly userService: UsersService) {}
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   async findAll() {
-    return this.db.users.findAll();
+    return await this.userService.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor, NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.db.users.findById(id);
+    return await this.userService.findOne(id);
   }
 
   @Post()
   @UseInterceptors(ClassSerializerInterceptor)
   async create(@Body() createUserDto: CreateUserDto) {
-    return this.db.users.create(new CreateUserDto(createUserDto));
+    const user = new CreateUserDto(createUserDto);
+
+    return await this.userService.create(user);
   }
 
   @Put(':id')
   @UseInterceptors(ClassSerializerInterceptor, NotFoundInterceptor)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() { newPassword, oldPassword }: UpdatePasswordDto,
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    const user = this.db.users.findById(id);
-
-    if (!user) return;
-
-    if (user.password !== oldPassword) {
-      throw new HttpException(
-        errorMessages.incorrectPassword,
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    return this.db.users.update(id, new UpdateUserDto(user, newPassword));
+    return await this.userService.update(id, updatePasswordDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    const user = this.db.users.findById(id);
-
-    if (!user) return;
-
-    this.db.users.remove(id);
-
-    return '';
+    return await this.userService.delete(id);
   }
 }

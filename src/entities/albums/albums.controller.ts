@@ -13,26 +13,28 @@ import {
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { DB } from '../../db/DB';
+import { AlbumsService } from './albums.service';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly db: DB) {}
+  constructor(private readonly albumService: AlbumsService) {}
 
   @Get()
   async findAll() {
-    return this.db.albums.findAll();
+    return await this.albumService.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.db.albums.findById(id);
+    return this.albumService.findOne(id);
   }
 
   @Post()
   async create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.db.albums.create(new CreateAlbumDto(createAlbumDto));
+    const album = new CreateAlbumDto(createAlbumDto);
+
+    return this.albumService.create(album);
   }
 
   @Put(':id')
@@ -41,30 +43,13 @@ export class AlbumController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    const album = this.db.albums.findById(id);
-
-    if (!album) return;
-
-    return this.db.albums.update(id, updateAlbumDto);
+    return this.albumService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    const album = this.db.albums.findById(id);
-
-    if (!album) return;
-
-    this.db.albums.remove(id);
-
-    const updatedTracks = this.db.tracks
-      .findMany('albumId', id)
-      .map((track) => ({ ...track, albumId: null }));
-
-    this.db.tracks.updateMany(updatedTracks);
-    this.db.favorites.albums.remove(id);
-
-    return '';
+    return this.albumService.delete(id);
   }
 }
