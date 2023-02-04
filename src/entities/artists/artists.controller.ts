@@ -60,9 +60,14 @@ export class ArtistController {
 
     const updatedTracks = this.db.tracks
       .findMany('artistId', id)
+      .map((track) => ({ ...track, artistId: null }));
+    const updatedAlbums = this.db.albums
+      .findMany('artistId', id)
       .map((artist) => ({ ...artist, artistId: null }));
 
     this.db.tracks.updateMany(updatedTracks);
+    this.db.albums.updateMany(updatedAlbums);
+    this.db.favorites.artists.remove(id);
 
     return '';
   }

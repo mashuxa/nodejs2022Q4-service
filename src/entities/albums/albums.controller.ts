@@ -60,9 +60,10 @@ export class AlbumController {
 
     const updatedTracks = this.db.tracks
       .findMany('albumId', id)
-      .map((artist) => ({ ...artist, albumId: null }));
+      .map((track) => ({ ...track, albumId: null }));
 
     this.db.tracks.updateMany(updatedTracks);
+    this.db.favorites.albums.remove(id);
 
     return '';
   }

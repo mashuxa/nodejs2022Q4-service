@@ -57,6 +57,7 @@ export class TrackController {
     if (!track) return;
 
     this.db.tracks.remove(id);
+    this.db.favorites.tracks.remove(id);
 
     return '';
   }
