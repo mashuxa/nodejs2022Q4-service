@@ -17,6 +17,8 @@ git clone {repository URL}
 npm install
 ```
 
+## You can rename .env.example to .env, and set custom value for PORT (4000 by default)
+
 ## Running application
 
 ```
