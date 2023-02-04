@@ -9,6 +9,10 @@ export class DBEntity<Entity extends { id: string }> {
     return this.entities.find((entity) => entity.id === id);
   }
 
+  findMany(propName: string, value: string): Entity[] {
+    return this.entities.filter((entity) => entity[propName] === value);
+  }
+
   create(entity: Entity): Entity {
     this.entities.push(entity);
 
@@ -23,6 +27,16 @@ export class DBEntity<Entity extends { id: string }> {
     this.entities[userIndex] = updatedUser;
 
     return updatedUser;
+  }
+
+  updateMany(entities: Entity[]): Entity[] {
+    return entities.map((entity) => {
+      const index = this.entities.findIndex(({ id }) => id === entity.id);
+
+      this.entities[index] = Object.assign(this.entities[index], entity);
+
+      return entity;
+    });
   }
 
   remove(id: string): void {

@@ -10,57 +10,57 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateArtistDto } from './dto/create-artist.dto';
+import { CreateAlbumDto } from './dto/create-album.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { UpdateAlbumDto } from './dto/update-album.dto';
 import { DB } from '../../db/DB';
 
-@Controller('artist')
-export class ArtistController {
+@Controller('album')
+export class AlbumController {
   constructor(private readonly db: DB) {}
 
   @Get()
   async findAll() {
-    return this.db.artists.findAll();
+    return this.db.albums.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.db.artists.findById(id);
+    return this.db.albums.findById(id);
   }
 
   @Post()
-  async create(@Body() createArtistDto: CreateArtistDto) {
-    return this.db.artists.create(new CreateArtistDto(createArtistDto));
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
+    return this.db.albums.create(new CreateAlbumDto(createAlbumDto));
   }
 
   @Put(':id')
   @UseInterceptors(NotFoundInterceptor)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateArtistDto: UpdateArtistDto,
+    @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    const artist = this.db.artists.findById(id);
+    const album = this.db.albums.findById(id);
 
-    if (!artist) return;
+    if (!album) return;
 
-    return this.db.artists.update(id, updateArtistDto);
+    return this.db.albums.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    const artist = this.db.artists.findById(id);
+    const album = this.db.albums.findById(id);
 
-    if (!artist) return;
+    if (!album) return;
 
-    this.db.artists.remove(id);
+    this.db.albums.remove(id);
 
     const updatedTracks = this.db.tracks
-      .findMany('artistId', id)
-      .map((artist) => ({ ...artist, artistId: null }));
+      .findMany('albumId', id)
+      .map((artist) => ({ ...artist, albumId: null }));
 
     this.db.tracks.updateMany(updatedTracks);
 
