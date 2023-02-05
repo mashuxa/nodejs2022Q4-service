@@ -1,5 +1,11 @@
 import { Track } from '../interface/Track.interface';
-import { IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class UpdateTrackDto implements Omit<Track, 'id'> {
   @IsUUID()
@@ -10,9 +16,11 @@ export class UpdateTrackDto implements Omit<Track, 'id'> {
   @IsOptional()
   artistId: string | null;
 
+  @IsNotEmpty()
   @IsInt()
   duration: number;
 
+  @IsNotEmpty()
   @IsString()
   name: string;
 

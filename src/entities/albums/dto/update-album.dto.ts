@@ -1,14 +1,22 @@
 import { Album } from '../interface/album.interface';
-import { IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class UpdateAlbumDto implements Omit<Album, 'id'> {
   @IsOptional()
   @IsUUID()
   artistId: string | null;
 
+  @IsNotEmpty()
   @IsString()
   name: string;
 
+  @IsNotEmpty()
   @IsInt()
   year: number;
 
