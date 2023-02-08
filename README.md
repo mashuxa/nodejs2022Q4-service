@@ -1,5 +1,13 @@
 # Home Library Service
 
+## Docker
+
+- Run docker
+- Go to root directory
+- Rename .env.example => .env and set variables
+- Run:
+``docker-compose up``
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
