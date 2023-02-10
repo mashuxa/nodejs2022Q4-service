@@ -10,9 +10,9 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateTrackDto } from './dto/create-Track.dto';
+import { CreateTrackDto } from './dto/create-track.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import { UpdateTrackDto } from './dto/update-Track.dto';
+import { UpdateTrackDto } from './dto/update-track.dto';
 import { TracksService } from './tracks.service';
 
 @Controller('track')
