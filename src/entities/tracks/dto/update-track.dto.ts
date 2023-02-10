@@ -1,4 +1,4 @@
-import { Track } from '../interface/Track.interface';
+import { Track } from '../interface/track.interface';
 import {
   IsInt,
   IsNotEmpty,

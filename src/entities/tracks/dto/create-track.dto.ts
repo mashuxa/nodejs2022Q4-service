@@ -1,4 +1,4 @@
-import { Track } from '../interface/Track.interface';
+import { Track } from '../interface/track.interface';
 import { v4 as uuid } from 'uuid';
 import { UpdateTrackDto } from './update-track.dto';
 
