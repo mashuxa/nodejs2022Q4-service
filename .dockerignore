@@ -1,5 +1,6 @@
 .dockerignore
 Dockerfile
 /src/db/Dockerfile
+/src/db/data
 node_modules
 npm-debug.log
