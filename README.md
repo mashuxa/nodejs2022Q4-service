@@ -1,13 +1,5 @@
 # Home Library Service
 
-## Docker
-
-- Run docker
-- Go to root directory
-- Rename .env.example => .env and set variables
-- Run:
-``docker-compose up``
-
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -18,6 +10,22 @@
 ```
 git clone {repository URL}
 ```
+
+## Change branch to feature/add-docker
+
+## Docker
+
+- Run docker on your PC
+- Go to root directory of application
+- Rename .env.example => .env and set variables
+- Run for vulnerabilities scanning:
+  ```
+  npm run scan:docker
+  ```
+- Run application using docker:
+  ```
+  npm run start:docker
+  ```
 
 ## Installing NPM modules
 
