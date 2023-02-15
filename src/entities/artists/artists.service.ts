@@ -1,64 +1,46 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { ArtistDto } from './dto/artist.dto';
 import { ARTIST_REPOSITORY } from '../../db/entities/artists/constants';
-import { TRACK_REPOSITORY } from '../../db/entities/tracks/constants';
-import { ALBUM_REPOSITORY } from '../../db/entities/albums/constants';
-import { Track } from '../../db/entities/tracks/track';
 import { Artist } from '../../db/entities/artists/artist';
-import { Album } from '../../db/entities/albums/album';
 
 @Injectable()
 export class ArtistsService {
   constructor(
     @Inject(ARTIST_REPOSITORY)
-    private artistRepository: Repository<Artist>,
-    @Inject(TRACK_REPOSITORY)
-    private trackRepository: Repository<Track>,
-    @Inject(ALBUM_REPOSITORY)
-    private albumRepository: Repository<Album>,
+    private repository: Repository<Artist>,
   ) {}
 
   async findAll() {
-    return this.artistRepository.find();
+    return this.repository.find();
   }
 
   async findOne(id: string) {
-    return this.artistRepository.findOneBy({ id });
+    return this.repository.findOneBy({ id });
   }
 
-  async create(artist: CreateArtistDto) {
-    return this.artistRepository.create(artist);
+  async create(artistDto: ArtistDto) {
+    const artist = new Artist(artistDto);
+
+    return this.repository.save(artist);
   }
 
-  async update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = this.artistRepository.findOneBy({ id });
+  async update(id: string, updateArtistDto: ArtistDto) {
+    const artist = this.repository.findOneBy({ id });
 
     if (!artist) return;
 
-    return this.artistRepository.update(id, updateArtistDto);
+    await this.repository.update(id, updateArtistDto);
+
+    return this.repository.findOneBy({ id });
   }
 
   async delete(id: string) {
-    const artist = this.artistRepository.findOneBy({ id });
+    const artist = await this.repository.findOneBy({ id });
 
     if (!artist) return;
 
-    await this.artistRepository.delete(id);
-
-    this.trackRepository
-      .createQueryBuilder()
-      .update(Track)
-      .set({ artistId: null })
-      .where({ artistId: id });
-    this.albumRepository
-      .createQueryBuilder()
-      .update(Album)
-      .set({ artistId: null })
-      .where({ artistId: id });
-
-    // this.db.favorites.artists.remove(id);
+    await this.repository.delete(id);
 
     return '';
   }

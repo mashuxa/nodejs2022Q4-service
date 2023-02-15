@@ -13,9 +13,4 @@ export class CreateUserDto implements CreateUserDtoType {
   @IsString()
   @Exclude({ toPlainOnly: true })
   password: string;
-
-  constructor({ password, login }: CreateUserDtoType) {
-    this.login = login;
-    this.password = password;
-  }
 }

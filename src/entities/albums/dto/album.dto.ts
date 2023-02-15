@@ -7,7 +7,7 @@ import {
   IsUUID,
 } from 'class-validator';
 
-export class UpdateAlbumDto implements Omit<Album, 'id'> {
+export class AlbumDto implements Omit<Album, 'id'> {
   @IsOptional()
   @IsUUID()
   artistId: string | null;
@@ -19,8 +19,4 @@ export class UpdateAlbumDto implements Omit<Album, 'id'> {
   @IsNotEmpty()
   @IsInt()
   year: number;
-
-  constructor(artist: Partial<UpdateAlbumDto>) {
-    Object.assign(this, artist);
-  }
 }

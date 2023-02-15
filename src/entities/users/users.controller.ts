@@ -35,9 +35,7 @@ export class UserController {
   @Post()
   @UseInterceptors(ClassSerializerInterceptor)
   async create(@Body() createUserDto: CreateUserDto) {
-    const user = new CreateUserDto(createUserDto);
-
-    return await this.userService.create(user);
+    return await this.userService.create(createUserDto);
   }
 
   @Put(':id')

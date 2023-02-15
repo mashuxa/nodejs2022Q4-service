@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
-import { UpdateTrackDto } from './dto/update-track.dto';
-import { Track } from './interface/track.interface';
+import { TrackDto } from './dto/track.dto';
 import { TRACK_REPOSITORY } from '../../db/entities/tracks/constants';
+import { Track } from '../../db/entities/tracks/track';
 
 @Injectable()
 export class TracksService {
@@ -20,25 +20,28 @@ export class TracksService {
     return this.repository.findOneBy({ id });
   }
 
-  async create(track: Track) {
-    return this.repository.create(track);
+  async create(trackDto: TrackDto) {
+    const track = new Track(trackDto);
+
+    return this.repository.save(track);
   }
 
-  async update(id: string, updateTrackDto: UpdateTrackDto) {
-    const track = this.repository.findOneBy({ id });
+  async update(id: string, updateTrackDto: TrackDto) {
+    const track = await this.repository.findOneBy({ id });
 
     if (!track) return;
 
-    return this.repository.update(id, updateTrackDto);
+    await this.repository.update(id, updateTrackDto);
+
+    return this.repository.findOneBy({ id });
   }
 
   async delete(id: string) {
-    const track = this.repository.findOneBy({ id });
+    const track = await this.repository.findOneBy({ id });
 
     if (!track) return;
 
     await this.repository.delete(id);
-    // this.db.favorites.tracks.remove(id);
 
     return '';
   }

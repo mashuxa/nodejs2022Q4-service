@@ -14,6 +14,7 @@ services:
       - custom_network
     volumes:
       - ./src/db/data:/var/lib/postgresql/data
+    command: -p ${POSTGRES_PORT}
   node:
     container_name: application
     restart: always
