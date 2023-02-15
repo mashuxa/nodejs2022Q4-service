@@ -10,9 +10,8 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateTrackDto } from './dto/create-track.dto';
+import { TrackDto } from './dto/track.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import { UpdateTrackDto } from './dto/update-track.dto';
 import { TracksService } from './tracks.service';
 
 @Controller('track')
@@ -31,17 +30,15 @@ export class TrackController {
   }
 
   @Post()
-  async create(@Body() createTrackDto: CreateTrackDto) {
-    const track = new CreateTrackDto(createTrackDto);
-
-    return await this.trackService.create(track);
+  async create(@Body() createTrackDto: TrackDto) {
+    return await this.trackService.create(createTrackDto);
   }
 
   @Put(':id')
   @UseInterceptors(NotFoundInterceptor)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateTrackDto: UpdateTrackDto,
+    @Body() updateTrackDto: TrackDto,
   ) {
     return await this.trackService.update(id, updateTrackDto);
   }

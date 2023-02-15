@@ -1,7 +1,7 @@
 import { Artist } from '../interface/artist.interface';
 import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateArtistDto implements Omit<Artist, 'id'> {
+export class ArtistDto implements Omit<Artist, 'id'> {
   @IsNotEmpty()
   @IsBoolean()
   grammy: boolean;
@@ -9,8 +9,4 @@ export class UpdateArtistDto implements Omit<Artist, 'id'> {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  constructor(artist: Partial<UpdateArtistDto>) {
-    Object.assign(this, artist);
-  }
 }

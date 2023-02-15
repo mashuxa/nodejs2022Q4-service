@@ -10,9 +10,8 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateArtistDto } from './dto/create-artist.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { ArtistDto } from './dto/artist.dto';
 import { ArtistsService } from './artists.service';
 
 @Controller('artist')
@@ -31,17 +30,15 @@ export class ArtistController {
   }
 
   @Post()
-  async create(@Body() createArtistDto: CreateArtistDto) {
-    const artist = new CreateArtistDto(createArtistDto);
-
-    return await this.artistsService.create(artist);
+  async create(@Body() createArtistDto: ArtistDto) {
+    return await this.artistsService.create(createArtistDto);
   }
 
   @Put(':id')
   @UseInterceptors(NotFoundInterceptor)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateArtistDto: UpdateArtistDto,
+    @Body() updateArtistDto: ArtistDto,
   ) {
     return await this.artistsService.update(id, updateArtistDto);
   }

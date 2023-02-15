@@ -7,7 +7,7 @@ import {
   IsUUID,
 } from 'class-validator';
 
-export class UpdateTrackDto implements Omit<Track, 'id'> {
+export class TrackDto implements Omit<Track, 'id'> {
   @IsUUID()
   @IsOptional()
   albumId: string | null;
@@ -23,8 +23,4 @@ export class UpdateTrackDto implements Omit<Track, 'id'> {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  constructor(track: Partial<UpdateTrackDto>) {
-    Object.assign(this, track);
-  }
 }

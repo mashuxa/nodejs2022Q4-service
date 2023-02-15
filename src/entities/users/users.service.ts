@@ -21,8 +21,10 @@ export class UsersService {
     return this.repository.findOneBy({ id });
   }
 
-  async create(user: CreateUserDto) {
-    return this.repository.create(user);
+  async create(userDto: CreateUserDto) {
+    const user = new User(userDto);
+
+    return this.repository.save(user);
   }
 
   async update(id: string, { newPassword, oldPassword }: UpdatePasswordDto) {
@@ -37,11 +39,13 @@ export class UsersService {
       );
     }
 
-    return this.repository.update(id, { ...user, password: newPassword });
+    await this.repository.update(id, { password: newPassword });
+
+    return this.repository.findOneBy({ id });
   }
 
   async delete(id: string) {
-    const user = this.repository.findOneBy({ id });
+    const user = await this.repository.findOneBy({ id });
 
     if (!user) return;
 

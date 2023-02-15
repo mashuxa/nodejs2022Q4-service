@@ -10,9 +10,8 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateAlbumDto } from './dto/create-album.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import { UpdateAlbumDto } from './dto/update-album.dto';
+import { AlbumDto } from './dto/album.dto';
 import { AlbumsService } from './albums.service';
 
 @Controller('album')
@@ -31,17 +30,15 @@ export class AlbumController {
   }
 
   @Post()
-  async create(@Body() createAlbumDto: CreateAlbumDto) {
-    const album = new CreateAlbumDto(createAlbumDto);
-
-    return this.albumService.create(album);
+  async create(@Body() createAlbumDto: AlbumDto) {
+    return this.albumService.create(createAlbumDto);
   }
 
   @Put(':id')
   @UseInterceptors(NotFoundInterceptor)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateAlbumDto: UpdateAlbumDto,
+    @Body() updateAlbumDto: AlbumDto,
   ) {
     return this.albumService.update(id, updateAlbumDto);
   }
