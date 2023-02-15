@@ -1,39 +1,44 @@
-import { DB } from '../../db/DB';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interface/track.interface';
+import { TRACK_REPOSITORY } from '../../db/entities/tracks/constants';
 
 @Injectable()
 export class TracksService {
-  constructor(private readonly db: DB) {}
+  constructor(
+    @Inject(TRACK_REPOSITORY)
+    private repository: Repository<Track>,
+  ) {}
 
   async findAll() {
-    return this.db.tracks.findAll();
+    return this.repository.find();
   }
 
   async findOne(id: string) {
-    return this.db.tracks.findById(id);
+    return this.repository.findOneBy({ id });
   }
 
   async create(track: Track) {
-    return this.db.tracks.create(track);
+    return this.repository.create(track);
   }
 
   async update(id: string, updateTrackDto: UpdateTrackDto) {
-    const track = this.db.tracks.findById(id);
+    const track = this.repository.findOneBy({ id });
 
     if (!track) return;
 
-    return this.db.tracks.update(id, updateTrackDto);
+    return this.repository.update(id, updateTrackDto);
   }
 
   async delete(id: string) {
-    const track = this.db.tracks.findById(id);
+    const track = this.repository.findOneBy({ id });
 
     if (!track) return;
 
-    this.db.tracks.remove(id);
-    this.db.favorites.tracks.remove(id);
+    await this.repository.delete(id);
+    // this.db.favorites.tracks.remove(id);
 
     return '';
   }
