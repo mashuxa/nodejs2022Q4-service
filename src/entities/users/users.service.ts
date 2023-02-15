@@ -1,28 +1,32 @@
-import { DB } from '../../db/DB';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import errorMessages from '../../constants/errorMessages';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './interface/user.interface';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from '../../db/entities/users/user';
+import { USER_REPOSITORY } from '../../db/entities/users/constants';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly db: DB) {}
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private repository: Repository<User>,
+  ) {}
 
   async findAll() {
-    return this.db.users.findAll();
+    return this.repository.find();
   }
 
   async findOne(id: string) {
-    return this.db.users.findById(id);
+    return this.repository.findOneBy({ id });
   }
 
-  async create(user: User) {
-    return this.db.users.create(user);
+  async create(user: CreateUserDto) {
+    return this.repository.create(user);
   }
 
   async update(id: string, { newPassword, oldPassword }: UpdatePasswordDto) {
-    const user = this.db.users.findById(id);
+    const user = await this.repository.findOneBy({ id });
 
     if (!user) return;
 
@@ -33,15 +37,15 @@ export class UsersService {
       );
     }
 
-    return this.db.users.update(id, new UpdateUserDto(user, newPassword));
+    return this.repository.update(id, { ...user, password: newPassword });
   }
 
   async delete(id: string) {
-    const user = this.db.users.findById(id);
+    const user = this.repository.findOneBy({ id });
 
     if (!user) return;
 
-    this.db.users.remove(id);
+    await this.repository.delete(id);
 
     return '';
   }
