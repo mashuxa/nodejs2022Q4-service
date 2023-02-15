@@ -1,45 +1,54 @@
-import { DB } from '../../db/DB';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { Album } from './interface/album.interface';
+import { ALBUM_REPOSITORY } from '../../db/entities/albums/constants';
+import { TRACK_REPOSITORY } from '../../db/entities/tracks/constants';
+import { Album } from '../../db/entities/albums/album';
+import { Track } from '../../db/entities/tracks/track';
 
 @Injectable()
 export class AlbumsService {
-  constructor(private readonly db: DB) {}
+  constructor(
+    @Inject(ALBUM_REPOSITORY)
+    private albumRepository: Repository<Album>,
+    @Inject(TRACK_REPOSITORY)
+    private trackRepository: Repository<Track>,
+  ) {}
 
   async findAll() {
-    return this.db.albums.findAll();
+    return this.albumRepository.find();
   }
 
   async findOne(id: string) {
-    return this.db.albums.findById(id);
+    return this.albumRepository.findOneBy({ id });
   }
 
   async create(album: Album) {
-    return this.db.albums.create(album);
+    return this.albumRepository.create(album);
   }
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const album = this.db.albums.findById(id);
+    const album = this.albumRepository.findOneBy({ id });
 
     if (!album) return;
 
-    return this.db.albums.update(id, updateAlbumDto);
+    return this.albumRepository.update(id, updateAlbumDto);
   }
 
   async delete(id: string) {
-    const album = this.db.albums.findById(id);
+    const album = this.albumRepository.findOneBy({ id });
 
     if (!album) return;
 
-    this.db.albums.remove(id);
+    await this.albumRepository.delete(id);
 
-    const updatedTracks = this.db.tracks
-      .findMany('albumId', id)
-      .map((track) => ({ ...track, albumId: null }));
+    this.trackRepository
+      .createQueryBuilder()
+      .update(Track)
+      .set({ albumId: null })
+      .where({ albumId: id });
 
-    this.db.tracks.updateMany(updatedTracks);
-    this.db.favorites.albums.remove(id);
+    // this.db.favorites.albums.remove(id);
 
     return '';
   }
