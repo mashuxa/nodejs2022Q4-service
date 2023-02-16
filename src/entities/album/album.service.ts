@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { AlbumDto } from './dto/album.dto';
-import { ALBUM_REPOSITORY } from '../../db/entities/albums/constants';
-import { Album } from '../../db/entities/albums/album';
+import { ALBUM_REPOSITORY } from './constants';
+import { AlbumEntity } from './album.entity';
 
 @Injectable()
-export class AlbumsService {
+export class AlbumService {
   constructor(
     @Inject(ALBUM_REPOSITORY)
-    private repository: Repository<Album>,
+    private repository: Repository<AlbumEntity>,
   ) {}
 
   async findAll() {
@@ -20,7 +20,7 @@ export class AlbumsService {
   }
 
   async create(albumDto: AlbumDto) {
-    const album = new Album(albumDto);
+    const album = new AlbumEntity(albumDto);
 
     return this.repository.save(album);
   }

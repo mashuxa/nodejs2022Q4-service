@@ -14,11 +14,11 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)

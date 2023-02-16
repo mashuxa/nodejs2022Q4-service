@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { TrackDto } from './dto/track.dto';
-import { TRACK_REPOSITORY } from '../../db/entities/tracks/constants';
-import { Track } from '../../db/entities/tracks/track';
+import { TRACK_REPOSITORY } from './constants';
+import { TrackEntity } from './track.entity';
 
 @Injectable()
-export class TracksService {
+export class TrackService {
   constructor(
     @Inject(TRACK_REPOSITORY)
-    private repository: Repository<Track>,
+    private repository: Repository<TrackEntity>,
   ) {}
 
   async findAll() {
@@ -21,7 +21,7 @@ export class TracksService {
   }
 
   async create(trackDto: TrackDto) {
-    const track = new Track(trackDto);
+    const track = new TrackEntity(trackDto);
 
     return this.repository.save(track);
   }

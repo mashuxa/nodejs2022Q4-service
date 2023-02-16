@@ -3,14 +3,14 @@ import { Repository } from 'typeorm';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import errorMessages from '../../constants/errorMessages';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from '../../db/entities/users/user';
-import { USER_REPOSITORY } from '../../db/entities/users/constants';
+import { UserEntity } from './user.entity';
+import { USER_REPOSITORY } from './constants';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @Inject(USER_REPOSITORY)
-    private repository: Repository<User>,
+    private repository: Repository<UserEntity>,
   ) {}
 
   async findAll() {
@@ -22,7 +22,7 @@ export class UsersService {
   }
 
   async create(userDto: CreateUserDto) {
-    const user = new User(userDto);
+    const user = new UserEntity(userDto);
 
     return this.repository.save(user);
   }

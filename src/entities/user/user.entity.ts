@@ -7,8 +7,8 @@ import {
   ValueTransformer,
   VersionColumn,
 } from 'typeorm';
-import { CreateUserDto } from '../../../entities/users/dto/create-user.dto';
-import { User as UserInterface } from '../../../entities/users/interface/user.interface';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User as UserInterface } from './interface/user.interface';
 import { Exclude } from 'class-transformer';
 
 const transformer: ValueTransformer = {
@@ -16,8 +16,8 @@ const transformer: ValueTransformer = {
   to: (value: string): string => value,
 };
 
-@Entity()
-export class User implements UserInterface {
+@Entity({ name: 'User' })
+export class UserEntity implements UserInterface {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
   id: string;
 

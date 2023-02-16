@@ -5,14 +5,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Artist } from '../artists/artist';
-import { Album } from '../albums/album';
-import { Track as TrackInterface } from '../../../entities/tracks/interface/track.interface';
-import { TrackDto } from '../../../entities/tracks/dto/track.dto';
+import { ArtistEntity } from '../artists/artist.entity';
+import { AlbumEntity } from '../album/album.entity';
+import { Track as TrackInterface } from './interface/track.interface';
+import { TrackDto } from './dto/track.dto';
 import { IsOptional } from 'class-validator';
 
-@Entity()
-export class Track implements TrackInterface {
+@Entity({ name: 'Track' })
+export class TrackEntity implements TrackInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -30,19 +30,19 @@ export class Track implements TrackInterface {
   @Column({ nullable: true })
   albumId: string | null;
 
-  @ManyToOne(() => Artist, (artist) => artist.tracks, {
+  @ManyToOne(() => ArtistEntity, (artist) => artist.tracks, {
     cascade: true,
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'artistId', referencedColumnName: 'id' })
-  artist: Artist;
+  artist: ArtistEntity;
 
-  @ManyToOne(() => Album, (album) => album.tracks, {
+  @ManyToOne(() => AlbumEntity, (album) => album.tracks, {
     cascade: true,
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'albumId', referencedColumnName: 'id' })
-  album: Album;
+  album: AlbumEntity;
 
   constructor(dto: TrackDto) {
     Object.assign(this, dto);
