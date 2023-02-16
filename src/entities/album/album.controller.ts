@@ -12,11 +12,11 @@ import {
 } from '@nestjs/common';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
 import { AlbumDto } from './dto/album.dto';
-import { AlbumsService } from './albums.service';
+import { AlbumService } from './album.service';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly albumService: AlbumsService) {}
+  constructor(private readonly albumService: AlbumService) {}
 
   @Get()
   async findAll() {

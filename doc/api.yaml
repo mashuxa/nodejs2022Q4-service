@@ -97,15 +97,15 @@ components:
         artists:
           type: array
           items:
-            $ref: '#/components/schemas/Artist'
+            $ref: '#/components/schemas/ArtistEntity'
         albums:
           type: array
           items:
-            $ref: '#/components/schemas/Album'
+            $ref: '#/components/schemas/AlbumEntity'
         tracks:
           type: array
           items:
-            $ref: '#/components/schemas/Track'
+            $ref: '#/components/schemas/TrackEntity'
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -123,8 +123,8 @@ paths:
     get:
       tags:
         - Users
-      summary: Get all users
-      description: Get all users
+      summary: Get all user
+      description: Get all user
       responses:
         200:
           description: Successful operation
@@ -133,7 +133,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/UserEntity'
     post:
       tags:
         - Users
@@ -162,7 +162,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserEntity'
         400:
           description: Body does not contain required fields
   /user/{userId}:
@@ -183,7 +183,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserEntity'
         400:
           description: UserId is invalid (not uuid)
         404:
@@ -257,9 +257,9 @@ paths:
   /track:
     get:
       tags:
-        - Track
-      summary: Get tracks list
-      description: Gets all library tracks list
+        - TrackEntity
+      summary: Get track list
+      description: Gets all library track list
       responses:
         200:
           description: Successful operation
@@ -268,10 +268,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Track'
+                  $ref: '#/components/schemas/TrackEntity'
     post:
       tags:
-        - Track
+        - TrackEntity
       summary: Add new track
       description: Add new track information
       requestBody:
@@ -301,7 +301,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Track'
+                $ref: '#/components/schemas/TrackEntity'
         400:
           description: Body does not contain required fields
   /track/{id}:
@@ -314,7 +314,7 @@ paths:
           format: uuid
     get:
       tags:
-        - Track
+        - TrackEntity
       summary: Get single track by id
       description: Gets single track by id
       responses:
@@ -323,14 +323,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Track'
+                $ref: '#/components/schemas/TrackEntity'
         400:
           description: UserId is invalid (not uuid)
         404:
           description: Record with id === trackId doesn't exist
     put:
       tags:
-        - Track
+        - TrackEntity
       summary: Update track information
       description: Update library track information by UUID
       requestBody:
@@ -392,7 +392,7 @@ paths:
           description: Record with id === trackId doesn't exist
     delete:
       tags:
-        - Track
+        - TrackEntity
       summary: Delete track
       description: Delete track from library
       responses:
@@ -405,8 +405,8 @@ paths:
   /album:
     get:
       tags:
-        - Album
-      summary: Get albums list
+        - AlbumEntity
+      summary: Get album list
       description: Gets all library alibums list
       responses:
         200:
@@ -416,10 +416,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Album'
+                  $ref: '#/components/schemas/AlbumEntity'
     post:
       tags:
-        - Album
+        - AlbumEntity
       summary: Add new album
       description: Add new album information
       requestBody:
@@ -447,7 +447,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Album'
+                $ref: '#/components/schemas/AlbumEntity'
         400:
           description: Body does not contain required fields
   /album/{id}:
@@ -460,7 +460,7 @@ paths:
           format: uuid
     get:
       tags:
-        - Album
+        - AlbumEntity
       summary: Get single album by id
       description: Gets single album by id
       responses:
@@ -469,14 +469,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Album'
+                $ref: '#/components/schemas/AlbumEntity'
         400:
           description: AlbumId is invalid (not uuid)
         404:
           description: Record with id === albumId doesn't exist
     put:
       tags:
-        - Album
+        - AlbumEntity
       summary: Update album information
       description: Update library album information by UUID
       requestBody:
@@ -504,14 +504,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Album'
+                $ref: '#/components/schemas/AlbumEntity'
         400:
           description: AlbumId is invalid (not uuid)
         404:
           description: Record with id === albumId doesn't exist
     delete:
       tags:
-        - Album
+        - AlbumEntity
       summary: Delete album
       description: Delete album from library
       responses:
@@ -524,9 +524,9 @@ paths:
   /artist:
     get:
       tags:
-        - Artist
-      summary: Get all artists
-      description: Gets all artists
+        - ArtistEntity
+      summary: Get all artist
+      description: Gets all artist
       responses:
         200:
           description: Successful operation
@@ -535,10 +535,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Artist'
+                  $ref: '#/components/schemas/ArtistEntity'
     post:
       tags:
-        - Artist
+        - ArtistEntity
       summary: Add new artist
       description: Add new artist
       requestBody:
@@ -561,7 +561,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Artist'
+                $ref: '#/components/schemas/ArtistEntity'
         400:
           description: Body does not contain required fields
   /artist/{id}:
@@ -574,7 +574,7 @@ paths:
           format: uuid
     get:
       tags:
-        - Artist
+        - ArtistEntity
       summary: Get single artist by id
       description: Get single artist by id
       responses:
@@ -583,14 +583,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Artist'
+                $ref: '#/components/schemas/ArtistEntity'
         400:
           description: ArtistId is invalid (not uuid)
         404:
           description: Record with id === artistId doesn't exist
     put:
       tags:
-        - Artist
+        - ArtistEntity
       summary: Update artist information
       description: Update artist information by UUID
       requestBody:
@@ -613,14 +613,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Artist'
+                $ref: '#/components/schemas/ArtistEntity'
         400:
           description: ArtistId is invalid (not uuid)
         404:
           description: Record with id === artistId doesn't exist
     delete:
       tags:
-        - Artist
+        - ArtistEntity
       summary: Delete artist
       description: Delete artist from library
       responses:
@@ -633,16 +633,16 @@ paths:
   /favs:
     get:
       tags:
-        - Favorites
+        - FavoritesEntity
       summary: Get all favorites
-      description: Gets all favorites albums, tracks and artists
+      description: Gets all favorites album, track and artist
       responses:
         200:
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Favorites'
+                $ref: '#/components/schemas/FavoritesEntity'
   /favs/track/{id}:
     parameters:
       - name: id
@@ -653,7 +653,7 @@ paths:
           format: uuid
     post:
       tags:
-        - Favorites
+        - FavoritesEntity
       summary: Add track to the favorites
       description: Add track to the favorites
       responses:
@@ -665,7 +665,7 @@ paths:
           description: Record with id === trackId doesn't exist
     delete:
       tags:
-        - Favorites
+        - FavoritesEntity
       summary: Delete track from favorites
       description: Delete track from favorites
       responses:
@@ -685,7 +685,7 @@ paths:
           format: uuid
     post:
       tags:
-        - Favorites
+        - FavoritesEntity
       summary: Add album to the favorites
       description: Add album to the favorites
       responses:
@@ -697,7 +697,7 @@ paths:
           description: Record with id === albumId doesn't exist
     delete:
       tags:
-        - Favorites
+        - FavoritesEntity
       summary: Delete album from favorites
       description: Delete album from favorites
       responses:
@@ -717,7 +717,7 @@ paths:
           format: uuid
     post:
       tags:
-        - Favorites
+        - FavoritesEntity
       summary: Add artist to the favorites
       description: Add artist to the favorites
       responses:
@@ -729,7 +729,7 @@ paths:
           description: Record with id === artistId doesn't exist
     delete:
       tags:
-        - Favorites
+        - FavoritesEntity
       summary: Delete artist from favorites
       description: Delete artist from favorites
       responses:

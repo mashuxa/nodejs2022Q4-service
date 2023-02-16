@@ -10,43 +10,43 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { TrackDto } from './dto/track.dto';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
-import { TracksService } from './tracks.service';
+import { ArtistDto } from './dto/artist.dto';
+import { ArtistService } from './artist.service';
 
-@Controller('track')
-export class TrackController {
-  constructor(private readonly trackService: TracksService) {}
+@Controller('artist')
+export class ArtistController {
+  constructor(private readonly artistsService: ArtistService) {}
 
   @Get()
   async findAll() {
-    return await this.trackService.findAll();
+    return await this.artistsService.findAll();
   }
 
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.trackService.findOne(id);
+    return await this.artistsService.findOne(id);
   }
 
   @Post()
-  async create(@Body() createTrackDto: TrackDto) {
-    return await this.trackService.create(createTrackDto);
+  async create(@Body() createArtistDto: ArtistDto) {
+    return await this.artistsService.create(createArtistDto);
   }
 
   @Put(':id')
   @UseInterceptors(NotFoundInterceptor)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateTrackDto: TrackDto,
+    @Body() updateArtistDto: ArtistDto,
   ) {
-    return await this.trackService.update(id, updateTrackDto);
+    return await this.artistsService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.trackService.delete(id);
+    return await this.artistsService.delete(id);
   }
 }

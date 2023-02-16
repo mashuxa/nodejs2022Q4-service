@@ -6,14 +6,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Album as AlbumInterface } from '../../../entities/albums/interface/album.interface';
-import { AlbumDto } from '../../../entities/albums/dto/album.dto';
-import { Artist } from '../artists/artist';
-import { Track } from '../tracks/track';
+import { Album as AlbumInterface } from './interface/album.interface';
+import { AlbumDto } from './dto/album.dto';
+import { ArtistEntity } from '../artists/artist.entity';
+import { TrackEntity } from '../track/track.entity';
 import { IsOptional } from 'class-validator';
 
-@Entity()
-export class Album implements AlbumInterface {
+@Entity({ name: 'Album' })
+export class AlbumEntity implements AlbumInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -27,15 +27,15 @@ export class Album implements AlbumInterface {
   @Column({ nullable: true })
   artistId: string | null;
 
-  @ManyToOne(() => Artist, (artist) => artist.albums, {
+  @ManyToOne(() => ArtistEntity, (artist) => artist.albums, {
     cascade: true,
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'artistId', referencedColumnName: 'id' })
-  artist: Artist;
+  artist: ArtistEntity;
 
-  @OneToMany(() => Track, (track) => track.album)
-  tracks: Track[];
+  @OneToMany(() => TrackEntity, (track) => track.album)
+  tracks: TrackEntity[];
 
   constructor(dto: AlbumDto) {
     Object.assign(this, dto);

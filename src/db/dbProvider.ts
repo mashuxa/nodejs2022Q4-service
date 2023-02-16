@@ -1,11 +1,11 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
 import { DATA_SOURCE } from './constants';
-import { User } from './entities/users/user';
-import { Album } from './entities/albums/album';
-import { Artist } from './entities/artists/artist';
-import { Track } from './entities/tracks/track';
-import { Favorites } from './entities/favorites/favorites';
+import { UserEntity } from '../entities/user/user.entity';
+import { AlbumEntity } from '../entities/album/album.entity';
+import { ArtistEntity } from '../entities/artists/artist.entity';
+import { TrackEntity } from '../entities/track/track.entity';
+import { FavoritesEntity } from '../entities/favorites/favorites.entity';
 
 config();
 
@@ -21,7 +21,13 @@ export default {
       database: process.env.POSTGRES_DB,
       synchronize: true,
       logging: true,
-      entities: [User, Album, Artist, Track, Favorites],
+      entities: [
+        UserEntity,
+        AlbumEntity,
+        ArtistEntity,
+        TrackEntity,
+        FavoritesEntity,
+      ],
       subscribers: [],
       migrations: [],
     });

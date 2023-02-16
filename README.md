@@ -10,8 +10,9 @@
 ```
 git clone {repository URL}
 ```
-
-## Change branch to feature/add-docker
+```
+git checkout feature/add-postgres
+```
 
 ## Docker
 
@@ -26,7 +27,7 @@ git clone {repository URL}
   ```
   npm run start:docker
   ```
-[Link to DockerHub](https://hub.docker.com/repository/docker/mashuxa/nodejs2022q4-service)
+[Link to DockerHub](https://hub.docker.com/repository/docker/mashuxa/nodejs2022q4-service/tags)
 
 
 
