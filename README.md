@@ -27,6 +27,10 @@ git checkout feature/add-postgres
   ```
   npm run start:docker
   ```
+- Run tests using docker:
+  ```
+  npm run test:docker
+  ```
 [Link to DockerHub](https://hub.docker.com/repository/docker/mashuxa/nodejs2022q4-service/tags)
 
 
