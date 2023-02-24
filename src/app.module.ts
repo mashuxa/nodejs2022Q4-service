@@ -8,6 +8,7 @@ import { AlbumModule } from './entities/album/album.module';
 import { FavoritesModule } from './entities/favorites/favorites.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { LoggerService } from './logger/logger.service';
+import ExceptionsFilterProvider from './exceptionsFilter/exceptionsFilter.provider';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { LoggerService } from './logger/logger.service';
     FavoritesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, LoggerService],
+  providers: [AppService, LoggerService, ExceptionsFilterProvider],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
