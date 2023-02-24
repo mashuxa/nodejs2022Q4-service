@@ -1,5 +1,6 @@
 import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
 import { appendFile, mkdir, readdir, stat, writeFile } from 'fs/promises';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
@@ -13,7 +14,9 @@ export class LoggerService extends ConsoleLogger {
   }
 
   async writeLog(message: string, folder = '') {
-    const logDirectory = `./src/logs/${folder}`;
+    const logDirectory = ['./src/logs', folder]
+      .filter((value) => value)
+      .join('/');
     const files = await readdir(logDirectory).catch(async () => {
       const fileName = `${Date.now()}.txt`;
       await mkdir(logDirectory);
@@ -42,6 +45,17 @@ export class LoggerService extends ConsoleLogger {
 
   isLevelEnabled(level: LogLevel): boolean {
     return this.options.logLevels.includes(level);
+  }
+
+  getHttpLog(request: Request, response: Response): string {
+    const requestData = `[REQUEST] url: ${request.originalUrl}, method: ${
+      request.method
+    }, queryParameters: ${JSON.stringify(
+      request.params,
+    )}, body: ${JSON.stringify(request.body)}`;
+    const responseStatus = `[RESPONSE] status: ${response.statusCode}, message: ${response.statusMessage}`;
+
+    return `${responseStatus} | ${requestData}`;
   }
 
   log(message: string) {

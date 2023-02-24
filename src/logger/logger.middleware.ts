@@ -8,18 +8,8 @@ export class LoggerMiddleware implements NestMiddleware {
 
   use(request: Request, response: Response, next: NextFunction) {
     response.on('finish', () => {
-      const requestData = `[REQUEST] url: ${request.originalUrl}, method: ${
-        request.method
-      }, queryParameters: ${JSON.stringify(
-        request.params,
-      )}, body: ${JSON.stringify(request.body)}`;
-      const responseStatus = `[RESPONSE] status: ${response.statusCode}, message: ${response.statusMessage}`;
-      const message = `${responseStatus} | ${requestData}`;
-
-      if (response.statusCode > 399) {
-        this.logger.error(message);
-      } else {
-        this.logger.log(message);
+      if (response.statusCode < 400) {
+        this.logger.log(this.logger.getHttpLog(request, response));
       }
     });
 
