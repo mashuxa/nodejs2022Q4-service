@@ -2,8 +2,8 @@ import { ConsoleLogger, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
   }
 
   print(message: string) {
@@ -16,8 +16,10 @@ export class LoggerService extends ConsoleLogger {
     this.print(this.colorize(message, 'log'));
   }
 
-  error(message: string) {
-    this.print(this.colorize(message, 'error'));
+  error(message: string, stack?: string) {
+    const msg = [message, stack].filter((value) => value).join(' | STACK: ');
+
+    this.print(this.colorize(msg, 'error'));
   }
 
   warn(message: string) {
