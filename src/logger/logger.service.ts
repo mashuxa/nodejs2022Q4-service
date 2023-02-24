@@ -1,10 +1,15 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
 import { appendFile, mkdir, readdir, stat, writeFile } from 'fs/promises';
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
   constructor() {
     super();
+
+    const level = Number(process.env.LOG_LEVEL) + 1;
+    const logLevels = this.options.logLevels.slice(0, level);
+
+    this.setLogLevels(logLevels);
   }
 
   async writeLog(message: string, folder = '') {
@@ -35,27 +40,41 @@ export class LoggerService extends ConsoleLogger {
     console.log(data);
   }
 
+  isLevelEnabled(level: LogLevel): boolean {
+    return this.options.logLevels.includes(level);
+  }
+
   log(message: string) {
-    this.print(this.colorize(message, 'log'));
-    void this.writeLog(message);
+    if (this.isLevelEnabled('log')) {
+      this.print(this.colorize(message, 'log'));
+      void this.writeLog(message);
+    }
   }
 
   error(message: string, stack?: string) {
-    const msg = [message, stack].filter((value) => value).join(' | STACK: ');
+    if (this.isLevelEnabled('error')) {
+      const msg = [message, stack].filter((value) => value).join(' | STACK: ');
 
-    this.print(this.colorize(msg, 'error'));
-    void this.writeLog(msg, 'errors');
+      this.print(this.colorize(msg, 'error'));
+      void this.writeLog(msg, 'errors');
+    }
   }
 
   warn(message: string) {
-    this.print(this.colorize(message, 'warn'));
+    if (this.isLevelEnabled('warn')) {
+      this.print(this.colorize(message, 'warn'));
+    }
   }
 
   debug(message: string) {
-    this.print(this.colorize(message, 'debug'));
+    if (this.isLevelEnabled('debug')) {
+      this.print(this.colorize(message, 'debug'));
+    }
   }
 
   verbose(message: string) {
-    this.print(this.colorize(message, 'verbose'));
+    if (this.isLevelEnabled('verbose')) {
+      this.print(this.colorize(message, 'verbose'));
+    }
   }
 }
