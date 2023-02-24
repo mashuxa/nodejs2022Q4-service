@@ -12,7 +12,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT || 4000);
 }
-bootstrap();
 
 const logger = new LoggerService();
 const handleError = (error: Error) => {
@@ -21,3 +20,5 @@ const handleError = (error: Error) => {
 
 process.on('uncaughtException', handleError);
 process.on('unhandledRejection', handleError);
+
+bootstrap();
