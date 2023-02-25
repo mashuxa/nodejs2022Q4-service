@@ -21,6 +21,16 @@ export class UserService {
     return this.repository.findOneBy({ id });
   }
 
+  async findOneByLogin(login: string): Promise<UserEntity> {
+    const user = await this.repository.findOneBy({ login });
+
+    if (user) {
+      return user;
+    }
+
+    throw new HttpException(errorMessages.noUser, HttpStatus.FORBIDDEN);
+  }
+
   async create(userDto: CreateUserDto) {
     const user = new UserEntity(userDto);
 

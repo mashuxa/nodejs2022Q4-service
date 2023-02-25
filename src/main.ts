@@ -7,7 +7,9 @@ import { LoggerService } from './logger/logger.service';
 config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: false });
+  // @todo: fix
+  // const app = await NestFactory.create(AppModule, { logger: false );
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT || 4000);

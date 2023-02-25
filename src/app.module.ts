@@ -9,6 +9,7 @@ import { FavoritesModule } from './entities/favorites/favorites.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { LoggerService } from './logger/logger.service';
 import ExceptionsFilterProvider from './exceptionsFilter/exceptionsFilter.provider';
+import { AuthModule } from './entities/auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import ExceptionsFilterProvider from './exceptionsFilter/exceptionsFilter.provid
     ArtistModule,
     AlbumModule,
     FavoritesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, LoggerService, ExceptionsFilterProvider],

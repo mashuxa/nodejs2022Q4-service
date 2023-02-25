@@ -53,9 +53,14 @@ export class LoggerService extends ConsoleLogger {
     }, queryParameters: ${JSON.stringify(
       request.params,
     )}, body: ${JSON.stringify(request.body)}`;
-    const responseStatus = `[RESPONSE] status: ${response.statusCode}, message: ${response.statusMessage}`;
+    const responseData = `[RESPONSE] status: ${
+      response.statusCode
+      // @todo: get response body
+    }, body: ${JSON.stringify('response body')}, message: ${
+      response.statusMessage
+    }`;
 
-    return `${responseStatus} | ${requestData}`;
+    return `${requestData} | ${responseData}`;
   }
 
   log(message: string) {

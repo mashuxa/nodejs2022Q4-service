@@ -1,5 +1,6 @@
 export default {
   notFound: 'Not found',
   incorrectPassword: 'Incorrect password',
-  nonExistentEntity: 'non-existent entity',
+  nonExistentEntity: 'Non-existent entity',
+  noUser: 'No user with such login',
 };
