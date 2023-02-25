@@ -3,12 +3,11 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { UpdateTokenDto } from './dto/updateToken.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,10 +25,9 @@ export class AuthController {
     return await this.authService.login(credentials);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('refresh')
   @UseInterceptors(ClassSerializerInterceptor)
-  async refresh(@Body() credentials: CreateUserDto) {
+  async refresh(@Body() credentials: UpdateTokenDto) {
     return await this.authService.refresh(credentials);
   }
 }

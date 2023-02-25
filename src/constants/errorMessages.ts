@@ -1,6 +1,6 @@
 export default {
   notFound: 'Not found',
-  incorrectPassword: 'Incorrect password',
+  incorrectAuth: 'Incorrect password or login',
+  forbidden: 'Forbidden',
   nonExistentEntity: 'Non-existent entity',
-  noUser: 'No user with such login',
 };
