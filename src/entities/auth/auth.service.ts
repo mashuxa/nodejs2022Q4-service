@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../user/user.entity';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import * as bcrypt from 'bcryptjs';
 import errorMessages from '../../constants/errorMessages';
 import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
 import { UpdateTokenDto } from './dto/updateToken.dto';
 import { Payload } from './types';
 
@@ -55,6 +55,32 @@ export class AuthService {
     }
   }
 
+  async verifyRefreshToken(refreshToken: string): Promise<UserEntity> {
+    const isValidToken = await this.jwtService
+      .verifyAsync(refreshToken, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+        ignoreExpiration: false,
+      })
+      .catch(() => false);
+
+    if (!isValidToken) {
+      throw new HttpException(errorMessages.forbidden, HttpStatus.FORBIDDEN);
+    }
+
+    const payload = this.jwtService.decode(refreshToken) as Payload;
+    const user = await this.userService.findOne(payload.userId);
+
+    if (!user) {
+      throw new HttpException(errorMessages.notFound, HttpStatus.NOT_FOUND);
+    }
+
+    if (refreshToken !== user.refreshToken) {
+      throw new HttpException(errorMessages.forbidden, HttpStatus.FORBIDDEN);
+    }
+
+    return user;
+  }
+
   async signup({ login, password }: CreateUserDto) {
     const hashedPassword = await this.generateHash(password);
 
@@ -74,20 +100,7 @@ export class AuthService {
   }
 
   async refresh({ refreshToken: token }: UpdateTokenDto) {
-    if (!this.jwtService.verify(token)) {
-      throw new HttpException(errorMessages.forbidden, HttpStatus.FORBIDDEN);
-    }
-
-    const { userId } = this.jwtService.decode(token) as Payload;
-    const user = await this.userService.findOne(userId);
-
-    if (!user) {
-      throw new HttpException(errorMessages.notFound, HttpStatus.NOT_FOUND);
-    }
-
-    if (token !== user.refreshToken) {
-      throw new HttpException(errorMessages.forbidden, HttpStatus.FORBIDDEN);
-    }
+    const user = await this.verifyRefreshToken(token);
 
     const { accessToken, refreshToken } = await this.generateTokens(user);
 

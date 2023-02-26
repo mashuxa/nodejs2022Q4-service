@@ -4,11 +4,12 @@ import { DBModule } from '../../db/db.module';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './guard/jwt.strategy';
+import AuthProvider from './guard/auth.provider';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, AuthProvider],
   imports: [
     DBModule,
     UserModule,

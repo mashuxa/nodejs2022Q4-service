@@ -8,38 +8,32 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { NotFoundInterceptor } from '../../interceptors/NotFoundInterceptor';
 import { ArtistDto } from './dto/artist.dto';
 import { ArtistService } from './artist.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistsService: ArtistService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return await this.artistsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.artistsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createArtistDto: ArtistDto) {
     return await this.artistsService.create(createArtistDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':id')
   @UseInterceptors(NotFoundInterceptor)
   async update(
@@ -49,7 +43,6 @@ export class ArtistController {
     return await this.artistsService.update(id, updateArtistDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   @UseInterceptors(NotFoundInterceptor)
