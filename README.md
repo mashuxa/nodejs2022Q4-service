@@ -10,6 +10,30 @@
 ```
 git clone {repository URL}
 ```
+```
+git checkout feature/add-postgres
+```
+
+## Docker
+
+- Run docker on your PC
+- Go to root directory of application
+- Rename .env.example => .env and set variables
+- Run for vulnerabilities scanning:
+  ```
+  npm run scan:docker
+  ```
+- Run application using docker:
+  ```
+  npm run start:docker
+  ```
+- Run tests using docker:
+  ```
+  npm run test:docker
+  ```
+[Link to DockerHub](https://hub.docker.com/repository/docker/mashuxa/nodejs2022q4-service/tags)
+
+
 
 ## Installing NPM modules
 
