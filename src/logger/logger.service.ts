@@ -65,18 +65,17 @@ export class LoggerService extends ConsoleLogger {
     return this.options.logLevels.includes(level);
   }
 
-  getHttpLog(request: Request, response: Response): string {
+  getHttpLog(
+    request: Request,
+    response: Response,
+    responseBody: string,
+  ): string {
     const requestData = `[REQUEST] url: ${request.originalUrl}, method: ${
       request.method
     }, queryParameters: ${JSON.stringify(
       request.params,
     )}, body: ${JSON.stringify(request.body)}`;
-    const responseData = `[RESPONSE] status: ${
-      response.statusCode
-      // @todo: get response body
-    }, body: ${JSON.stringify('response body')}, message: ${
-      response.statusMessage
-    }`;
+    const responseData = `[RESPONSE] status: ${response.statusCode}, body: ${responseBody}, message: ${response.statusMessage}`;
 
     return `${requestData} | ${responseData}`;
   }

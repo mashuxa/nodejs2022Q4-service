@@ -8,6 +8,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 import { MESSAGES } from '@nestjs/core/constants';
 import { LoggerService } from '../logger/logger.service';
+import { getResponseBody } from '../logger/getResponseBody';
 
 @Catch()
 export class ExceptionsFilter implements ExceptionFilter {
@@ -40,8 +41,10 @@ export class ExceptionsFilter implements ExceptionFilter {
       const request = ctx.getRequest();
       const response = ctx.getResponse();
 
-      response.on('finish', () => {
-        this.logger.error(this.logger.getHttpLog(request, response));
+      getResponseBody(response, (body) => {
+        response.on('finish', () => {
+          this.logger.error(this.logger.getHttpLog(request, response, body));
+        });
       });
     } else {
       this.logger.error(exception.message, exception.stack);
