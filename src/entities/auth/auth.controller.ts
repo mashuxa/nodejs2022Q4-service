@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  HttpCode,
   Post,
   UseGuards,
   UseInterceptors,
@@ -24,6 +25,7 @@ export class AuthController {
   }
 
   @Public()
+  @HttpCode(200)
   @Post('login')
   @UseInterceptors(ClassSerializerInterceptor)
   async login(@Body() credentials: CreateUserDto) {
@@ -31,6 +33,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtRefreshAuthGuard)
+  @HttpCode(200)
   @Post('refresh')
   @UseInterceptors(ClassSerializerInterceptor)
   async refresh(@Body() credentials: UpdateTokenDto) {
