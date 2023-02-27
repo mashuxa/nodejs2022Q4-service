@@ -28,6 +28,10 @@ export class UserEntity implements UserInterface {
   @Column()
   password: string;
 
+  @Exclude()
+  @Column()
+  refreshToken: string;
+
   @CreateDateColumn({ transformer })
   createdAt: number;
 

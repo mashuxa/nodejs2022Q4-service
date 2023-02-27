@@ -21,12 +21,23 @@ export class UserService {
     return this.repository.findOneBy({ id });
   }
 
+  async findOneByLogin(login: string): Promise<UserEntity> {
+    const user = await this.repository.findOneBy({ login });
+
+    if (user) {
+      return user;
+    }
+
+    throw new HttpException(errorMessages.incorrectAuth, HttpStatus.FORBIDDEN);
+  }
+
   async create(userDto: CreateUserDto) {
     const user = new UserEntity(userDto);
 
     return this.repository.save(user);
   }
 
+  // @todo: change to hash (when test will be fixed)
   async update(id: string, { newPassword, oldPassword }: UpdatePasswordDto) {
     const user = await this.repository.findOneBy({ id });
 
@@ -34,7 +45,7 @@ export class UserService {
 
     if (user.password !== oldPassword) {
       throw new HttpException(
-        errorMessages.incorrectPassword,
+        errorMessages.incorrectAuth,
         HttpStatus.FORBIDDEN,
       );
     }
@@ -42,6 +53,10 @@ export class UserService {
     await this.repository.update(id, { password: newPassword });
 
     return this.repository.findOneBy({ id });
+  }
+
+  async updateToken(id: string, refreshToken: string) {
+    await this.repository.update(id, { refreshToken });
   }
 
   async delete(id: string) {
