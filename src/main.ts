@@ -7,16 +7,15 @@ import messages from './constants/messages';
 
 config();
 
-const logger = new LoggerService();
-const handleError = (error: Error) => {
-  logger.error(error.message, JSON.stringify(error.stack));
-};
-
-process.on('uncaughtException', handleError);
-process.on('unhandledRejection', handleError);
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: false });
+  const logger = new LoggerService();
+  const handleError = (error: Error) => {
+    logger.error(error.message, JSON.stringify(error.stack));
+  };
+
+  process.on('uncaughtException', handleError);
+  process.on('unhandledRejection', handleError);
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT || 4000);

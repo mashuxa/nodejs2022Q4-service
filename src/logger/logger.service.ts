@@ -1,6 +1,10 @@
 import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
-import { appendFile, mkdir, readdir, stat, writeFile } from 'fs/promises';
+import { appendFile, readdir, stat, writeFile } from 'fs/promises';
 import { Request, Response } from 'express';
+import { resolve } from 'path';
+import { mkdirSync } from 'fs';
+
+const MAX_LOG_SIZE = Number(process.env.MAX_LOG_FILE_SIZE_KB) * 1024;
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
@@ -11,28 +15,42 @@ export class LoggerService extends ConsoleLogger {
     const logLevels = this.options.logLevels.slice(0, level);
 
     this.setLogLevels(logLevels);
+    this.createLogDirectory();
+  }
+
+  createLogDirectory() {
+    mkdirSync(resolve('./src/logs/errors'), { recursive: true });
+  }
+
+  async createLogFile(directory: string): Promise<string> {
+    const fileName = `${Date.now()}.txt`;
+
+    await writeFile(resolve(directory, fileName), '');
+
+    return fileName;
+  }
+
+  async getFilesList(directory: string): Promise<string[]> {
+    const folderData = await readdir(directory, { withFileTypes: true });
+    const filterFiles = (acc, data) =>
+      data.isFile() ? [...acc, data.name] : acc;
+
+    const files = folderData.reduce(filterFiles, []);
+
+    return files.length ? files : [await this.createLogFile(directory)];
   }
 
   async writeLog(message: string, folder = '') {
-    const logDirectory = ['./src/logs', folder]
-      .filter((value) => value)
-      .join('/');
-    const files = await readdir(logDirectory).catch(async () => {
-      const fileName = `${Date.now()}.txt`;
-      await mkdir(logDirectory);
-      await writeFile(`${logDirectory}/${fileName}`, '', {});
-
-      return [fileName];
-    });
-    const lastLogPath = files.pop();
-    const lastLogFile = await stat(`${logDirectory}/${lastLogPath}`);
+    const logDirectory = resolve('./src/logs', folder);
+    const list = await this.getFilesList(logDirectory);
+    const lastLogPath = list[list.length - 1];
+    const path = resolve(logDirectory, lastLogPath);
+    const lastLogFile = await stat(path);
     const fileName =
-      lastLogFile.size > Number(process.env.MAX_LOG_FILE_SIZE_KB) * 1024
-        ? `${Date.now()}.txt`
-        : lastLogPath;
+      lastLogFile.size > MAX_LOG_SIZE ? `${Date.now()}.txt` : lastLogPath;
 
     await appendFile(
-      `${logDirectory}/${fileName}`,
+      resolve(logDirectory, fileName),
       `${this.getTimestamp()} | ${message}\n`,
     );
   }
