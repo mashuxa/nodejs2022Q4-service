@@ -1,5 +1,10 @@
 # Home Library Service
 
+##<code style="color: orange">Attention</code>
+
+For route ``auth/refresh`` <code style="color: orange">REFRESH</code> token should be added in HTTP Authorization header and body ``{ refreshToken }``
+[proof](https://discord.com/channels/755676888680366081/755859645184213073/1077808263824949340)
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -11,7 +16,7 @@
 git clone {repository URL}
 ```
 ```
-git checkout feature/add-postgres
+git checkout feature/add-auth
 ```
 
 ## Docker
@@ -49,6 +54,18 @@ npm install
 npm start
 ```
 
+## Running local tests
+
+```
+npm start test:auth
+```
+
+## Or try with flag --runInBand
+
+```
+npm run test:auth -- --runInBand
+```
+
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
@@ -60,7 +77,7 @@ After application running open new terminal and enter:
 To run all tests without authorization
 
 ```
-npm run test
+npm run test:auth
 ```
 
 To run only one of all test suites
